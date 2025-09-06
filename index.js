@@ -92,10 +92,6 @@ app.get("/user/:id/edit",(req , res)=>{
   
 });
 
-app.get("/user", (req, res) => {
-  let user = result[0];
-  res.render("showusers.ejs",{users});
-});
 
 //UPDATE
 app.patch("/user/:id",(req, res)=>{
@@ -125,7 +121,7 @@ app.patch("/user/:id",(req, res)=>{
 
 });
 
-/*app.get("/user/:id/changepass",(req,res)=>{
+app.get("/user/:id/changepass",(req,res)=>{
   let {id} =req.params;
      let q =`SELECT * FROM user WHERE id ='${id}'`;
 
@@ -143,7 +139,7 @@ app.patch("/user/:id",(req, res)=>{
 }
 
   
-});*/
+});
 
 app.get("/user/:id/deleteacc",(req,res)=>{
   let {id} =req.params;
@@ -159,7 +155,7 @@ app.get("/user/:id/deleteacc",(req,res)=>{
     });
 } catch(err) {
     console.log(err);
-    res.send("some error in db");
+      res.send("erroe in db")
 }
 
   
@@ -169,19 +165,47 @@ app.delete("/user/:id/deleteacc",(req, res)=>{
     let {id} = req.params;
     let { password : formpass ="" , username : formuser =""} = req.body;
   let q =`SELECT * FROM user WHERE id ='${id}'`;
-
    try{
-    connection.query(q, (err, result) =>{
+    connection.query(q, [id] ,(err, result) =>{
     if (err) throw err ;
     let user = result && result[0];
-    if(formpass !== user.password || formuser !== user.username){
+    if(formpass != user.password || formuser != user.username){
       res.send("Wrong password entered or wrong username entered");
       
     }else{
       let q2 =`DELETE FROM user  WHERE id ='${id}'`;
-      connection.query(q2 ,(err, result) => {
+      connection.query(q2 ,[id] ,(err, result) => {
         if(err) throw err;
-        res.send("ACCOUNT CHANGED SUCCESSFULLY")
+          res.redirect("/user");
+      });
+    }
+    
+    });
+} catch(err) {
+    console.log(err);
+      res.send("error in db")
+}
+
+});
+
+//CHANGE PASSWORD
+
+app.patch("/user/:id/changepass",(req, res)=>{
+    let {id} = req.params;
+    let { oldpass, newpass } = req.body;
+  let q =`SELECT * FROM user WHERE id ='${id}'`;
+
+   try{
+    connection.query(q, [id],(err, result) =>{
+    if (err) throw err ;
+    let user = result[0];
+    if(  oldpass !== user.password){
+      return res.send("Wrong password or username entered ");
+    }else{
+      let q2 =`UPDATE user SET password='${newpass}' WHERE id ='${id}'`;
+      connection.query(q2 ,[id],(err, result) => {
+        if(err) throw err;
+        res.redirect("/user");
       });
     }
     
@@ -197,7 +221,5 @@ app.delete("/user/:id/deleteacc",(req, res)=>{
 app.listen("8089",()=>{
   console.log("server is listening to port 8089");
 });
-
-
 
 

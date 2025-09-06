@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <h2>you are into change pass</h2>
+    
 </head>
 <body>
-    
+    <h2>YOU ARE IN CHANGE PASSWORD</h2>
+    <form method ="post" action ="/user/<%= user.id %>/changepass?_method=PATCH">
+        <input type ="password" name ="oldpass" placeholder ="enter old password" />
+        <input type ="password" name ="newpass" placeholder ="enter new password" />
+        
+        <button type ="submit">CHANGE PASSWORD</button>
+    </form>
 </body>
 </html>
