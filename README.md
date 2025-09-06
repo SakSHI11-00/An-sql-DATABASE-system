@@ -12,10 +12,12 @@ Update existing records
 Delete records or tables
 Basic SQL operations
 
-->TECH STACK
+->TECH 
+
 SQL (Structured Query Language)
 
 ->LEARNING OUTCOMES
+
 Run queries using queries.sql or your SQL client.
 Learning Outcomes
 Practical experience with relational databases
